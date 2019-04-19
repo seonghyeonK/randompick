@@ -124,6 +124,7 @@ $(function () {
 		pick.text("O・X");
 		options = ["O", "X"];
 		offcanvas_collapse.removeClass("open");
+		pick.addClass("blinking");
 	});
 
 	var pick = $("#pick");
