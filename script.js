@@ -120,6 +120,11 @@ $(function () {
 	offcanvas.on('click', function () {
 		offcanvas_collapse.toggleClass('open')
 	});
+	$("#preset_ox").click(function(){
+		pick.text("O・X");
+		options = ["O", "X"];
+		offcanvas_collapse.removeClass("open");
+	});
 
 	var pick = $("#pick");
 	var optionInput = $("#optionInput");
@@ -142,15 +147,8 @@ $(function () {
 	if (!selectedset) {
 		selectedset = "#preset_ox";
 		localStorage.setObject("selectedset", selectedset);
-	} else {
-		$(selectedset).trigger("click");
 	}
-
-	$("#preset_ox").click(function(){
-		pick.text("O・X");
-		options = ["O", "X"];
-		offcanvas_collapse.removeClass("open");
-	});
+	$(selectedset).trigger("click");
 
 	pick.mousedown(function () {
 		$(this).addClass('shake-vertical')
