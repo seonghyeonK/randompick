@@ -32,8 +32,9 @@
 	</nav>
 	<!-- particles.js container --> 
 	<div id="particles-js">
-		<div class="text-white d-flex position-absolute w-100 h-100 justify-content-center align-items-center">
+		<div class="text-white d-flex flex-column position-absolute w-100 h-100 justify-content-center align-items-center">
 			<h1 id="pick" class="blinking"></h1>
+			<h2 id="retry" class="fixed-bottom text-center" style="visibility: hidden; z-index: inherit;">Retry?</h2>
 		</div>
 	</div>
 	
@@ -55,6 +56,7 @@
 						<label for="optionInput">Option</label>
 						<input type="text" class="form-control" id="optionInput" placeholder="Type a options least 2">
 						<small id="optionHelp" class="form-text">Type then press the enter key.</small>
+						<small class="form-text">To enter an integer range, enter ":::" between the two integers. e.g., 1:::9</small>
 					</div>
 					<p id="inputList"></p>
 				</div>

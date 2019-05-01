@@ -115,8 +115,8 @@ Storage.prototype.getObject = function(key) {
 $(function () {
 	'use strict'
 
-	var offcanvas = $('[data-toggle="offcanvas"]');
-	var offcanvas_collapse = $('.offcanvas-collapse');
+	var offcanvas = $('[data-toggle="offcanvas"]'),
+	offcanvas_collapse = $('.offcanvas-collapse');
 	offcanvas.on('click', function () {
 		offcanvas_collapse.toggleClass('open')
 	});
@@ -125,20 +125,24 @@ $(function () {
 		options = ["O", "X"];
 		offcanvas_collapse.removeClass("open");
 		pick.addClass("blinking");
+		selectedset = "#preset_ox";
+		localStorage.setObject("selectedset", selectedset);
 	});
 
-	var pick = $("#pick");
-	var optionInput = $("#optionInput");
-	var inputList = $("#inputList");
-	var setNameInput = $("#setNameInput");
-	var createUserset = $("#createUserset");
-	var usersetMenuList = $("#usersetMenuList");
-	var createModal = $("#createModal");
-	var usersetTmp = {};
-	var options = [];
+	var pick = $("#pick"),
+	optionInput = $("#optionInput"),
+	inputList = $("#inputList"),
+	setNameInput = $("#setNameInput"),
+	createUserset = $("#createUserset"),
+	usersetMenuList = $("#usersetMenuList"),
+	createModal = $("#createModal"),
+	retry = $("#retry"),
+	numberRangeRegExp = new RegExp("^(\\d+)(:::)(\\d+)$"),
+	usersetTmp = {},
+	options = [];
 
-	var userset = localStorage.getObject("userset");
-	var selectedset = localStorage.getObject("selectedset");
+	var userset = localStorage.getObject("userset"),
+	selectedset = localStorage.getObject("selectedset");
 	if (!userset) {
 		userset = [];
 		localStorage.setObject("userset", userset);
@@ -156,23 +160,45 @@ $(function () {
 		.animate({fontSize: "2.5rem"}, 100);
 	}).mouseup(function () {
 		$(this).animate({fontSize: ".1rem"}, 150, function () {
+			if (options.length <= 2) {
+				retry.css('visibility','visible').hide().fadeIn("slow");
+			} else {
+				retry.css('visibility','hidden');
+			}
 			$(this).css({fontSize: "3rem"})
 			.removeClass('shake-vertical blinking')
-			.text(options[Math.floor((Math.random() * options.length))]);
+			.text(function () {
+				//options[Math.floor((Math.random() * options.length))]
+				options = shuffle(options);
+				return options.pop();
+			});
 		});
+	});
+
+	retry.click(function () {
+		retry.css('visibility','hidden');
+		$(selectedset).trigger("click");
 	});
 
 	optionInput.keydown(function (key) {
 		if (key.keyCode == 13) {
-			inputList.append($('<a />', {
-				href: "#",
-				class: "optionBadge badge badge-light",
-				text: $.trim($(this).val())
-			}).on({
-				"click" : function () { $(this).remove(); validCreateUserset(); },
-				"mouseenter" : function () { $(this).css({"text-decoration-line": "line-through"}); },
-				"mouseleave" : function () { $(this).css({"text-decoration-line": "none"}); }
-			})).append(" ");
+			var badgeTxt = $.trim($(this).val());
+			var match = numberRangeRegExp.exec(badgeTxt);
+			if (match != null) {
+				var largerNum, smallerNum;
+				if (match[1] < match[3]) {
+					largerNum = match[3];
+					smallerNum = match[1];
+				} else {
+					largerNum = match[1];
+					smallerNum = match[3];
+				}
+				for (let i = smallerNum; i <= largerNum; i++) {
+					insertBadge(i);
+				}
+			} else {
+				insertBadge(badgeTxt);
+			}
 			$(this).val("");
 			validCreateUserset();
 		}
@@ -181,6 +207,18 @@ $(function () {
 	setNameInput.on("change paste keyup", function() {
 		validCreateUserset();
 	});
+
+function insertBadge(badgeTxt) {
+	inputList.append($('<a />', {
+		href: "#",
+		class: "optionBadge badge badge-light",
+		text: badgeTxt
+	}).on({
+		"click" : function () { $(this).remove(); validCreateUserset(); },
+		"mouseenter" : function () { $(this).css({"text-decoration-line": "line-through"}); },
+		"mouseleave" : function () { $(this).css({"text-decoration-line": "none"}); }
+	})).append(" ");
+}
 
 	function validCreateUserset() {
 		var nameInputVal = $.trim(setNameInput.val());
@@ -217,18 +255,37 @@ $(function () {
 	});
 
 	function appendUsersetMenuList(element, index, array) {
-		usersetMenuList.append($('<a />', {
+		usersetMenuList
+		.append($('<a />', {
 			id: "userset_" + index,
 			href: "#",
 			class: "dropdown-item",
-			text: element.name
-		}).click(function(){
+			text: element.name,
+			"data-options": element.options
+		})
+		.click(function(){
 			pick.text(element.name);
-			options = element.options;
+			localStorage.setObject("selectedset", "#userset_" + index);
+			selectedset = localStorage.getObject("selectedset"),
+			options = $(this).data("options").split(",");
 			pick.addClass("blinking");
 			offcanvas_collapse.removeClass("open");
-			localStorage.setObject("selectedset", "#userset_" + index);
 		}));
+	}
+
+	function shuffle(array) {
+		var currentIndex = array.length, temporaryValue, randomIndex;
+		// While there remain elements to shuffle...
+		while (0 !== currentIndex) {
+			// Pick a remaining element...
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex -= 1;
+			// And swap it with the current element.
+			temporaryValue = array[currentIndex];
+			array[currentIndex] = array[randomIndex];
+			array[randomIndex] = temporaryValue;
+		}
+		return array;
 	}
 
 })

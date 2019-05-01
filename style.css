@@ -23,6 +23,7 @@ canvas{ display: block; vertical-align: bottom; }
 		transition: visibility .3s ease-in-out, -webkit-transform .3s ease-in-out;
 		transition: transform .3s ease-in-out, visibility .3s ease-in-out;
 		transition: transform .3s ease-in-out, visibility .3s ease-in-out, -webkit-transform .3s ease-in-out;
+		z-index: 1040;
 	}
 	.offcanvas-collapse.open {
 		visibility: visible;
@@ -31,7 +32,7 @@ canvas{ display: block; vertical-align: bottom; }
 		background-color: #000;
 	}
 }
-#pick{
+#pick, #retry{
 	cursor: pointer;
 }
 
