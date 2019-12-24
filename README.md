@@ -1,4 +1,6 @@
 # randompick
 Random Picker. Don't waste your time thinking about what to do. 
 
-https://seonghyeonk.github.io/randompick/
+<https://seonghyeonk.github.io/randompick>
+
+<https://github.com/seonghyeonK/randompick>
