@@ -208,17 +208,17 @@ $(function () {
 		validCreateUserset();
 	});
 
-function insertBadge(badgeTxt) {
-	inputList.append($('<a />', {
-		href: "#",
-		class: "optionBadge badge badge-light",
-		text: badgeTxt
-	}).on({
-		"click" : function () { $(this).remove(); validCreateUserset(); },
-		"mouseenter" : function () { $(this).css({"text-decoration-line": "line-through"}); },
-		"mouseleave" : function () { $(this).css({"text-decoration-line": "none"}); }
-	})).append(" ");
-}
+	function insertBadge(badgeTxt) {
+		inputList.append($('<a />', {
+			href: "#",
+			class: "optionBadge badge badge-light",
+			text: badgeTxt
+		}).on({
+			"click" : function () { $(this).remove(); validCreateUserset(); },
+			"mouseenter" : function () { $(this).css({"text-decoration-line": "line-through"}); },
+			"mouseleave" : function () { $(this).css({"text-decoration-line": "none"}); }
+		})).append(" ");
+	}
 
 	function validCreateUserset() {
 		var nameInputVal = $.trim(setNameInput.val());
